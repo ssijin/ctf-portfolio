@@ -109,11 +109,14 @@ def reader(song, startLabel):
   while not finished and line_count < MAX_LINES:
     line_count += 1
     for line in song_lines[lip].split(';'):
+      # 세미콜론으로 생긴 빈 공백은 처리 X
       if line == '' and song_lines[lip] != '':
         continue
+      # REFRAIN 만나면 바로 다음 줄(lip+1)을 RETRURN N 형태로 저장해
       if line == 'REFRAIN':
         song_lines[refrain_return] = 'RETURN ' + str(lip + 1)
         lip = refrain
+      # 정규표현식 구문
       elif re.match(r"CROWD.*", line):
         crowd = input('Crowd: ')
         song_lines[lip] = 'Crowd: ' + crowd

@@ -33,7 +33,7 @@ Crowd:
 
 
 ## 문제 분석
-* 주어진 lyric-reader.py의 코드를 열어보면 가사를 출력하는 코드이다.
+주어진 lyric-reader.py의 코드를 열어보면 가사를 출력하는 코드이다.
 * flag가 포함된 secret_intro 문자열에 [REFRAIN]이라는 후렴구와 [VERSE1]이라는 벌스 부분 등의 가사 부분을 덧붙여져 있다.
 * 코드를 뜯어보면, 가사를 [VERSE1]부터 쭉 출력하다가 REFRAIN; 부분을 만나면 [REFRAIN] 부분에서 후렴구 부분을 출력하고 다 출력하면 마지막의 RETURN 부분을 만나 원래 가사로 돌아가는 구조이다.
 * REFRAIN을 만나면, 해당 라인의 다음 줄을 REFARIN의 마지막에 있는 "RETURN 라인번호"로 저장하고 RETURN에 도달했을 때 라인번호를 추출해 되돌아가는 코드이다.
