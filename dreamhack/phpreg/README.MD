@@ -1,6 +1,8 @@
 # Challenge: dreamhack - phpreg
 
 ## 문제 설명 & 접근
+https://dreamhack.io/wargame/challenges/873
+
 웹으로 접근해보면 nickname과 password를 입력하게 되어있다.
 description을 보면 적절히 입력해서 Step 2로 넘어가고 system() 함수를 이용하여 플래그를 획득하라고 되어 있다. 
 플래그는 ../dream/flag.txt에 위치한다고 한다.

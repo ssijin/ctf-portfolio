@@ -1,6 +1,8 @@
 # Challenge: dreamhack - ex-reg-ex
 
 ## 문제 설명 & 접근
+https://dreamhack.io/wargame/challenges/834
+
 정규표현식을 맞추는 예제이다.
 
 ## 문제 풀이

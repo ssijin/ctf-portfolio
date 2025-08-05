@@ -1,6 +1,8 @@
 # Challenge: dreamhack - baby-linux
 
 ## 문제 설명 & 접근
+https://dreamhack.io/wargame/challenges/837
+
 echo $()에서 빈칸에 명령어를 입력해 flag를 찾는 문제로, flag.txt를 출력하라고 되어 있다.
 
 ## 문제 풀이
