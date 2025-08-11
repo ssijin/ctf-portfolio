@@ -42,6 +42,7 @@ Unicode escape sequence : 자바스크립트에서 문자열이나 식별자 내
     4. 중간 표현으로 변환 : 엔진은 최적화를 위해 중간 코드 형태(IR, 바이트코드 등)으로 변환
     5. 실행
 
+
 ## 문제 풀이
 step 1 - 필터링 확인
 * app.py의 필터링 기능부터 확인하자. filter는 script, on. javascript 키워드가 있으면 대소문자 구분없이 원본 텍스트에서 제거한다.
@@ -76,14 +77,25 @@ step 2 - 우회 방법
     ```javascript
     <img src="false" oonnerror="locatioonn.href='/memo?memo='+document.cookie">
     ```
- 
+* iframe을 쓸 수도 있다. iframe src="javascript:location.href=~~~">의 익스플로잇을 하자.
+    * 주의할 점은 javascript를 우회하겠다고 아래와 같이 Unicode Escape Sequence를 써서는 안된다는 것이다.
+        ```javascript
+        <iframe src="java\u0073cript:locati\u006fn.href='/memo?memo='+d\u006fcument.cookie;">
+        ```
+    * location이나 document가 javascript 실행 컨텍스트 안에서 등장하므로 괜찮지만 javascript:는 그렇지 않다. src="..."는 속성값(URL)이고 HTML 파서가 여기서 HTML entity인 &#x73;를 디코딩한다. 디코딩하고 값이 javascript:가 되면 브라우저는 이를 프로토콜로 인식하고 나머지를 JS 파서에 넘겨 실행한다. 따라서 javascript 부분은 Unicode가 아니라 HTML Entity Encoding으로 우회하는 것이 좋다. 아래 코드를 쓰면 동작한다.
+        ```
+        <iframe src="java&#x73;cript:locati\u006fn.href='/memo?memo='+d\u006fcument.cookie;">
+        ```
+
+
 ## 시행착오
-* html entity encoding을 이용해보고자 했다. 태그 부분 s를 html entity encoding으로 수정해 접근했지만 정상 수행이 되지 않았다. 플래그 출력이 검증된 익스플로잇 코드를 "<" 부분만 바꿔서 한번 더 진행해봤지만, 역시 플래그는 출력되지 않는다. 
+* html entity encoding을 태그에 이용해보고자 했다. 태그 부분 s를 html entity encoding으로 수정해 접근했지만 정상 수행이 되지 않았다. 플래그 출력이 검증된 익스플로잇 코드를 "<" 부분만 바꿔서 한번 더 진행해봤지만, 역시 플래그는 출력되지 않는다. 
     ```javascript
     &lt;scronipt>locati\u006fn.href = "/memo?memo=" + document.cookie;</scronipt>
     ```
-* 디버깅해보니 이 값 그대로 서버에서 xss_filter까지 거치는 것을 알 수 있다. 해당 내용을 폼에 입력해서 /vuln에서 return되는 값은 ```&lt;script>locati\u006fn.href = "/memo?memo=" + document.cookie;</script>```로 그대로이다. 브라우저가 html 파싱할 때 태그로 전환되지 않은 것으로 보인다. 
+* 디버깅해보니 이 값 그대로 서버에서 xss_filter까지 거치는 것을 알 수 있다. 해당 내용을 폼에 입력해서 /vuln에서 return되는 값은 ```&lt;script>locati\u006fn.href = "/memo?memo=" + document.cookie;</script>```로 그대로이다. 태그 이름을 HTML Encoding해도 HTML 파서가 디코딩하지 않으므로 ```<script>```가 만들어지지 않는 것이다.
 
 ## 결과
-위에서 다룬 풀이들 중 하나(시행착오 제외)를 택해 폼에 입력하면 /memo에 플래그가 출력된다.
+위에서 다룬 풀이들 중 하나를 택해 폼에 입력하면 /memo에 플래그가 출력된다.
+
 

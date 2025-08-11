@@ -53,6 +53,7 @@ step 2
     f"{host}/login?uid[$regex]=ad.in&upw[$regex]=D.{{{flag}{ch}"
     ```
 * 후보군 character를 flag에 붙여 정규표현식 검증하면서 flag를 갱신해나가면 된다.
+* length는 36이고 DH와 중괄호는 이미 알고 있으므로 range를 32로 잡아 중괄호 안 부분 32글자를 찾자.
 
 
 ## 결과
