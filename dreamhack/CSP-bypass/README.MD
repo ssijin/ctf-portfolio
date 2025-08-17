@@ -21,7 +21,7 @@ step 1
     * default-src 'self' : 현재 도메인에서만 리소스 로드를 허용한다. 외부 도메인에서의 리소스 로드를 차단하는 역할
     * img-src https://dreamhack.io : 이미지 로드는 해당 사이트에서만 허용
     * style-src 'self' 'unsafe-inline' : 현재 도메인의 css 파일을 허용하는데 unsafe-inline이 설정되어 있어 인라인 css를 허용한다.
-    * script-src 'self' 'nonce-{nonce}' : 같은 출처 내의 파일만 script의 src로 올 수 있게 허용하되 특정 nonce 값을 가지고 있어야 한다. nonce = os.urandom(16).hex()로 16바이트 랜덤 값을 hex로 요청 시마다 변환한다. 따라서 nonce 예측은 불가
+    * script-src 'self' 'nonce-{nonce}' : 같은 출처 내의 파일만 script의 src로 올 수 있게 허용한다. 또한 특정 nonce 값을 가진 인라인 스크립트만 허용한다. nonce = os.urandom(16).hex()로 16바이트 랜덤 값을 hex로 요청 시마다 변환한다. 따라서 nonce 예측은 불가
     ```
     @app.after_request
     def add_header(response):
